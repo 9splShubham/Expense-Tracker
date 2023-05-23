@@ -1,4 +1,6 @@
+import 'package:expense_tracker/core/app_fonts.dart';
 import 'package:expense_tracker/core/app_size.dart';
+import 'package:expense_tracker/core/app_string.dart';
 import 'package:expense_tracker/core/com_helper/com_helper.dart';
 import 'package:expense_tracker/screens/dashboard.dart';
 import 'package:expense_tracker/screens/sign_up.dart';
@@ -29,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("LOGIN"),
+        title: Text(AppString.textLOGIN),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -43,8 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: "Email Address",
-                hintStyle: TextStyle(fontSize: AppSize.textSize15),
+                hintText: AppString.textEmailAddress,
+                hintStyle:
+                    getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
             ),
             SizedBox(
@@ -55,8 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: "Password",
-                hintStyle: TextStyle(fontSize: AppSize.textSize15),
+                hintText: AppString.textPassword,
+                hintStyle:
+                    getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
             ),
             SizedBox(
@@ -80,10 +84,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             MaterialPageRoute(
                                 builder: (context) => Dashboard()));
                       }).then((value) {
-                        alertDialog("Successfully Logged In");
+                        alertDialog(AppString.textSuccessfullyLoggedIn);
                       });
                     },
-                    child: Text("Login"))),
+                    child: Text(AppString.textLOGIN))),
             SizedBox(
               height: 20,
             ),
@@ -91,13 +95,15 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 child: Text.rich(TextSpan(children: [
                   TextSpan(
-                    text: "Dont have an account ?",
-                    style: TextStyle(fontSize: AppSize.textSize15),
+                    text: AppString.textDonthaveanaccount,
+                    style:
+                        getTextStyle(AppFonts.regularBlack, AppSize.textSize15),
                   ),
                   TextSpan(
-                      text: " Register Now",
-                      style: TextStyle(
-                          color: Colors.blue, fontSize: AppSize.textSize15))
+                    text: AppString.textRegisterNow,
+                    style:
+                        getTextStyle(AppFonts.regularBlue, AppSize.textSize15),
+                  )
                 ])),
               ),
               onTap: () {

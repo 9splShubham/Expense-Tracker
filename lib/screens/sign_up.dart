@@ -1,4 +1,6 @@
+import 'package:expense_tracker/core/app_fonts.dart';
 import 'package:expense_tracker/core/app_size.dart';
+import 'package:expense_tracker/core/app_string.dart';
 import 'package:expense_tracker/core/com_helper/com_helper.dart';
 import 'package:expense_tracker/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,7 +36,7 @@ class _SignUpState extends State<SignUp> {
                 MaterialPageRoute(builder: (context) => LoginScreen()));
           },
         ),
-        title: const Text("SIGN UP"),
+        title: const Text(AppString.textSIGNUP),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -47,8 +49,9 @@ class _SignUpState extends State<SignUp> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: "Full Name",
-                hintStyle: TextStyle(fontSize: AppSize.textSize15),
+                hintText: AppString.textFullName,
+                hintStyle:
+                    getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
             ),
             SizedBox(
@@ -59,8 +62,9 @@ class _SignUpState extends State<SignUp> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: "Email Address",
-                hintStyle: TextStyle(fontSize: AppSize.textSize15),
+                hintText: AppString.textEmailAddress,
+                hintStyle:
+                    getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
             ),
             SizedBox(
@@ -71,8 +75,9 @@ class _SignUpState extends State<SignUp> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: "Password",
-                hintStyle: TextStyle(fontSize: AppSize.textSize15),
+                hintText: AppString.textPassword,
+                hintStyle:
+                    getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
             ),
             SizedBox(
@@ -96,10 +101,10 @@ class _SignUpState extends State<SignUp> {
                             MaterialPageRoute(
                                 builder: (context) => LoginScreen()));
                       }).then((value) {
-                        alertDialog("Successfully Registered");
+                        alertDialog(AppString.textSuccessfullyRegistered);
                       });
                     },
-                    child: Text("Sign Up"))),
+                    child: Text(AppString.textSIGNUP))),
           ],
         ),
       ),
