@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/app_config.dart';
 import 'package:expense_tracker/core/app_fonts.dart';
 import 'package:expense_tracker/core/app_size.dart';
 import 'package:expense_tracker/core/app_string.dart';
@@ -7,6 +8,7 @@ import 'package:expense_tracker/screens/sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -24,6 +26,18 @@ class _LoginScreenState extends State<LoginScreen> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  void Login() async {
+    FirebaseAuth.instance
+        .signInWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
+        .then((value) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Dashboard()));
+    }).then((value) {
+      alertDialog(AppString.textSuccessfullyLoggedIn);
+    });
   }
 
   @override
@@ -71,21 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                     onPressed: () {
-                      FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: emailController.text,
-                              password: passwordController.text)
-                          .catchError((error) {
-                        print(error);
-                        alertDialog("Error: Data Save Fail--$error");
-                      }).then((value) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Dashboard()));
-                      }).then((value) {
-                        alertDialog(AppString.textSuccessfullyLoggedIn);
-                      });
+                      Login();
                     },
                     child: Text(AppString.textLOGIN))),
             SizedBox(

@@ -2,7 +2,7 @@ import 'package:expense_tracker/core/app_color.dart';
 import 'package:expense_tracker/core/app_string.dart';
 import 'package:expense_tracker/history_screen/history_screen.dart';
 import 'package:expense_tracker/screens/add_data.dart';
-
+import 'package:expense_tracker/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -32,6 +32,8 @@ class _Dashboard extends State<Dashboard> {
     const Color(0xFFe88322),
   ];
 
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,22 +41,45 @@ class _Dashboard extends State<Dashboard> {
         child: ListView(
           children: [
             DrawerHeader(
-              child: Text(AppString.textEmailAddress),
-              decoration: BoxDecoration(color: AppColor.colorBlue),
+              child: Text(
+                'User : ${user?.email}',
+                style: const TextStyle(color: AppColor.colorWhite),
+              ),
+              decoration: const BoxDecoration(color: AppColor.colorBlue),
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.history,
                 color: AppColor.colorBlue,
               ),
-              title: Text(
+              title: const Text(
                 AppString.textHistory,
               ),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HistoryScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const HistoryScreen()),
                 );
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.logout_rounded,
+                color: AppColor.colorBlue,
+              ),
+              title: const Text(
+                AppString.textLogOut,
+              ),
+              onTap: () {
+                FirebaseAuth.instance.signOut().then((value) {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                      (route) => false).then((value) {});
+                });
               },
             ),
           ],
@@ -81,17 +106,6 @@ class _Dashboard extends State<Dashboard> {
       ),
       appBar: AppBar(
         title: const Text(AppString.textDashboard),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(5),
-            child: InkWell(
-              child: const Icon(Icons.logout_rounded),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-              },
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -117,7 +131,7 @@ class _Dashboard extends State<Dashboard> {
                         width: 5,
                         color: AppColor.colorBlue,
                       ),
-                      Text(AppString.textPassword),
+                      Text(AppString.textYear),
                       Icon(Icons.arrow_drop_down_sharp),
                     ],
                   ),

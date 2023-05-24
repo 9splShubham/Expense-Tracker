@@ -45,7 +45,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       Text(AppString.textMonth),
                       Icon(Icons.arrow_drop_down_sharp),
                       VerticalDivider(
-                        width: 5,
+                        width: 10,
                         color: AppColor.colorBlue,
                       ),
                       Text(AppString.textYear),

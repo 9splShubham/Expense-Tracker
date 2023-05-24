@@ -2,9 +2,11 @@ import 'package:expense_tracker/core/app_color.dart';
 import 'package:expense_tracker/core/app_fonts.dart';
 import 'package:expense_tracker/core/app_size.dart';
 import 'package:expense_tracker/core/app_string.dart';
+import 'package:expense_tracker/db_helper/db_helper.dart';
 import 'package:expense_tracker/screens/bottom_sheet/bottom_sheet_add_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddData extends StatefulWidget {
   const AddData({Key? key}) : super(key: key);
@@ -17,10 +19,12 @@ class _AddDataState extends State<AddData> {
   /// Initial Selected Value
   String dropdownvalue = 'Income';
   String dropdown = 'Cash';
+  String drop = 'Clear';
 
   /// List of items in our dropdown menu
   var items = ['Income', 'Expense'];
   var payment = ['Cash', 'Card', 'Net Banking', 'Cheque'];
+  var status = ['Clear', 'Under Process', 'Reject'];
 
   /// DATE
   DateTime selectedDate = DateTime.now();
@@ -54,6 +58,15 @@ class _AddDataState extends State<AddData> {
       });
   }
 
+  late DbHelper dbHelper;
+
+  @override
+  void initState() {
+    dbHelper = DbHelper();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +89,7 @@ class _AddDataState extends State<AddData> {
                   SizedBox(
                     width: 250,
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: TextEditingController(
                           text: "${selectedDate.toLocal()}".split(' ')[0]),
                       decoration:
@@ -104,6 +118,7 @@ class _AddDataState extends State<AddData> {
                   SizedBox(
                     width: 250,
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: TextEditingController(
                           text: selectedTime.format(context).toString()),
                       decoration:
@@ -152,8 +167,11 @@ class _AddDataState extends State<AddData> {
                         // After selecting the desired option,it will
                         // change button value to selected value
                         onChanged: (String? newValue) {
-                          setState(() {
+                          setState(() async {
                             dropdownvalue = newValue!;
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            dbHelper.insertType(newValue!);
                           });
                         },
                       ),
@@ -232,6 +250,50 @@ class _AddDataState extends State<AddData> {
                         onChanged: (String? newValue) {
                           setState(() {
                             dropdown = newValue!;
+                            dbHelper.insertPayment(newValue!);
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(AppString.textAddStatus),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  Container(
+                    width: 210,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        // Initial Value
+                        value: drop,
+
+                        // Down Arrow Icon
+                        icon: const Icon(
+                          Icons.arrow_drop_down_rounded,
+                          color: AppColor.colorBlue,
+                        ),
+
+                        // Array list of items
+                        items: status.map((String status) {
+                          return DropdownMenuItem(
+                            value: status,
+                            child: Text(status),
+                          );
+                        }).toList(),
+                        // After selecting the desired option,it will
+                        // change button value to selected value
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            drop = newValue!;
+                            dbHelper.insertStatus(newValue!);
                           });
                         },
                       ),

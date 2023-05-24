@@ -25,6 +25,8 @@ class AppString {
   static const textExpense = 'Expense :';
   static const textRS5000 = 'RS : 5,000';
   static const textData = 'Data';
+  static const textLogOut = 'Log Out';
+  static const textSuccessfullyLoggedOut = 'Successfully Logged Out';
 
   ///  ADD DATA
 
@@ -38,6 +40,7 @@ class AppString {
   static const textSelectCategory = 'Select Category';
   static const textPaymentMethod = 'Payment Method:';
   static const textAddNote = 'Add Note: ';
+  static const textAddStatus = 'Add Status: ';
 
   /// BOTTOM SHEET
 
