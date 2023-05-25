@@ -1,9 +1,13 @@
 import 'package:expense_tracker/core/app_color.dart';
+import 'package:expense_tracker/core/app_config.dart';
 import 'package:expense_tracker/core/app_fonts.dart';
 import 'package:expense_tracker/core/app_size.dart';
 import 'package:expense_tracker/core/app_string.dart';
+import 'package:expense_tracker/core/com_helper/com_helper.dart';
 import 'package:expense_tracker/db_helper/db_helper.dart';
+import 'package:expense_tracker/model/model.dart';
 import 'package:expense_tracker/screens/bottom_sheet/bottom_sheet_add_data.dart';
+import 'package:expense_tracker/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,11 +24,20 @@ class _AddDataState extends State<AddData> {
   String dropdownvalue = 'Income';
   String dropdown = 'Cash';
   String drop = 'Clear';
+  String Category = 'Food';
 
   /// List of items in our dropdown menu
   var items = ['Income', 'Expense'];
   var payment = ['Cash', 'Card', 'Net Banking', 'Cheque'];
   var status = ['Clear', 'Under Process', 'Reject'];
+  var category = [
+    'Food',
+    'Shoping',
+    'Social Life',
+    'Education',
+    'Transport',
+    'Health'
+  ];
 
   /// DATE
   DateTime selectedDate = DateTime.now();
@@ -67,6 +80,42 @@ class _AddDataState extends State<AddData> {
     super.initState();
   }
 
+  late TextEditingController dateController = TextEditingController();
+  late TextEditingController timeController = TextEditingController();
+  late TextEditingController amountController = TextEditingController();
+  late TextEditingController noteController = TextEditingController();
+
+  void AddDataInDb() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+
+    String Date = dateController.text;
+    String Time = timeController.text;
+    String Amount = amountController.text;
+    String Note = noteController.text;
+
+    AddDataModel aModel = AddDataModel();
+
+    aModel.id = sp.getString(AppConfig.textUserId);
+    aModel.date = Date;
+    aModel.time = Time;
+    aModel.type = dropdownvalue;
+    aModel.amount = int.parse(Amount);
+    aModel.category = Category;
+    aModel.paymentMethod = dropdown;
+    aModel.status = drop;
+    aModel.note = Note;
+
+    dbHelper = DbHelper();
+    await dbHelper.insertData(aModel).then((value) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Dashboard()));
+    }).then((value) {
+      alertDialog(AppString.textAddeddatasuccessfully);
+    }).catchError((error) {
+      print('${error}');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +139,7 @@ class _AddDataState extends State<AddData> {
                     width: 250,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
-                      controller: TextEditingController(
+                      controller: dateController = TextEditingController(
                           text: "${selectedDate.toLocal()}".split(' ')[0]),
                       decoration:
                           InputDecoration(hintText: AppString.textSelectDate),
@@ -119,7 +168,7 @@ class _AddDataState extends State<AddData> {
                     width: 250,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
-                      controller: TextEditingController(
+                      controller: timeController = TextEditingController(
                           text: selectedTime.format(context).toString()),
                       decoration:
                           InputDecoration(hintText: AppString.textSelectTime),
@@ -167,11 +216,8 @@ class _AddDataState extends State<AddData> {
                         // After selecting the desired option,it will
                         // change button value to selected value
                         onChanged: (String? newValue) {
-                          setState(() async {
+                          setState(() {
                             dropdownvalue = newValue!;
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            dbHelper.insertType(newValue!);
                           });
                         },
                       ),
@@ -185,11 +231,61 @@ class _AddDataState extends State<AddData> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Text(AppString.textAmount),
+                  SizedBox(
+                    height: 30,
+                    width: 250,
+                    child: TextFormField(
+                      controller: amountController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: AppString.textEnterAmount,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text(AppString.textCategory),
                   SizedBox(
                     width: 30,
                   ),
-                  SizedBox(
+                  Container(
+                    width: 250,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        // Initial Value
+                        value: Category,
+
+                        // Down Arrow Icon
+                        icon: const Icon(
+                          Icons.arrow_drop_down_sharp,
+                          color: AppColor.colorBlue,
+                        ),
+
+                        // Array list of items
+                        items: category.map((String category) {
+                          return DropdownMenuItem(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        // After selecting the desired option,it will
+                        // change button value to selected value
+                        onChanged: (String? newValue) {
+                          setState(() async {
+                            Category = newValue!;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  /*SizedBox(
                     height: 20,
                     width: 250,
                     child: InkWell(
@@ -208,11 +304,11 @@ class _AddDataState extends State<AddData> {
                             });
                       },
                     ),
-                  ),
-                  Icon(
+                  ),*/
+                  /*    Icon(
                     Icons.arrow_drop_down_sharp,
                     color: AppColor.colorBlue,
-                  )
+                  )*/
                 ],
               ),
               SizedBox(
@@ -250,7 +346,6 @@ class _AddDataState extends State<AddData> {
                         onChanged: (String? newValue) {
                           setState(() {
                             dropdown = newValue!;
-                            dbHelper.insertPayment(newValue!);
                           });
                         },
                       ),
@@ -293,7 +388,6 @@ class _AddDataState extends State<AddData> {
                         onChanged: (String? newValue) {
                           setState(() {
                             drop = newValue!;
-                            dbHelper.insertStatus(newValue!);
                           });
                         },
                       ),
@@ -315,6 +409,7 @@ class _AddDataState extends State<AddData> {
                       height: 20,
                       width: 250,
                       child: TextFormField(
+                        controller: noteController,
                         decoration:
                             InputDecoration(hintText: AppString.textAddNote),
                       )),
@@ -335,7 +430,9 @@ class _AddDataState extends State<AddData> {
                   style: ElevatedButton.styleFrom(
                       primary: AppColor.colorWhite,
                       side: BorderSide(color: AppColor.colorBlue, width: 2)),
-                  onPressed: () {},
+                  onPressed: () {
+                    AddDataInDb();
+                  },
                 ),
               ),
               /*          SizedBox(

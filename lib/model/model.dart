@@ -25,3 +25,54 @@ class SignUpModel {
     return data;
   }
 }
+
+/// ADD DATA
+
+class AddDataModel {
+  String? id;
+  String? date;
+  String? time;
+  String? type;
+  int? amount;
+  String? category;
+  String? paymentMethod;
+  String? status;
+  String? note;
+
+  AddDataModel(
+      {this.id,
+      this.date,
+      this.time,
+      this.type,
+      this.amount,
+      this.category,
+      this.paymentMethod,
+      this.status,
+      this.note});
+
+  AddDataModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    date = json['date'];
+    time = json['time'];
+    type = json['type'];
+    amount = json['amount'];
+    category = json['category'];
+    paymentMethod = json['paymentMethod'];
+    status = json['status'];
+    note = json['note'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['date'] = this.date;
+    data['time'] = this.time;
+    data['type'] = this.type;
+    data['amount'] = this.amount;
+    data['category'] = this.category;
+    data['paymentMethod'] = this.paymentMethod;
+    data['status'] = this.status;
+    data['note'] = this.note;
+    return data;
+  }
+}

@@ -41,6 +41,9 @@ class AppString {
   static const textPaymentMethod = 'Payment Method:';
   static const textAddNote = 'Add Note: ';
   static const textAddStatus = 'Add Status: ';
+  static const textAmount = 'Amount ';
+  static const textEnterAmount = 'Enter Amount ';
+  static const textAddeddatasuccessfully = 'Added data successfully';
 
   /// BOTTOM SHEET
 
