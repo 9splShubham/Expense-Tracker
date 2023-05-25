@@ -6,7 +6,6 @@ import 'package:expense_tracker/core/app_string.dart';
 import 'package:expense_tracker/core/com_helper/com_helper.dart';
 import 'package:expense_tracker/db_helper/db_helper.dart';
 import 'package:expense_tracker/model/model.dart';
-import 'package:expense_tracker/screens/bottom_sheet/bottom_sheet_add_data.dart';
 import 'package:expense_tracker/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,14 +21,12 @@ class AddData extends StatefulWidget {
 class _AddDataState extends State<AddData> {
   /// Initial Selected Value
   String dropdownvalue = 'Income';
-  String dropdown = 'Cash';
-  String drop = 'Clear';
+
   String Category = 'Food';
 
   /// List of items in our dropdown menu
   var items = ['Income', 'Expense'];
-  var payment = ['Cash', 'Card', 'Net Banking', 'Cheque'];
-  var status = ['Clear', 'Under Process', 'Reject'];
+
   var category = [
     'Food',
     'Shoping',
@@ -76,7 +73,6 @@ class _AddDataState extends State<AddData> {
   @override
   void initState() {
     dbHelper = DbHelper();
-
     super.initState();
   }
 
@@ -95,14 +91,14 @@ class _AddDataState extends State<AddData> {
 
     AddDataModel aModel = AddDataModel();
 
-    aModel.id = sp.getString(AppConfig.textUserId);
+    aModel.userId = sp.getString(AppConfig.textUserId);
     aModel.date = Date;
     aModel.time = Time;
     aModel.type = dropdownvalue;
     aModel.amount = int.parse(Amount);
     aModel.category = Category;
-    aModel.paymentMethod = dropdown;
-    aModel.status = drop;
+    aModel.paymentMethod = SelectedItemPay;
+    aModel.status = SelectedItemStatus;
     aModel.note = Note;
 
     dbHelper = DbHelper();
@@ -116,6 +112,8 @@ class _AddDataState extends State<AddData> {
     });
   }
 
+  String? SelectedItemPay;
+  String? SelectedItemStatus;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -278,7 +276,7 @@ class _AddDataState extends State<AddData> {
                         // After selecting the desired option,it will
                         // change button value to selected value
                         onChanged: (String? newValue) {
-                          setState(() async {
+                          setState(() {
                             Category = newValue!;
                           });
                         },
@@ -324,9 +322,9 @@ class _AddDataState extends State<AddData> {
                   Container(
                     width: 210,
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
+                      child: DropdownButton<String>(
                         // Initial Value
-                        value: dropdown,
+                        value: SelectedItemPay,
 
                         // Down Arrow Icon
                         icon: const Icon(
@@ -335,17 +333,19 @@ class _AddDataState extends State<AddData> {
                         ),
 
                         // Array list of items
-                        items: payment.map((String payment) {
-                          return DropdownMenuItem(
-                            value: payment,
-                            child: Text(payment),
-                          );
-                        }).toList(),
+                        items: [
+                          DropdownMenuItem(value: "Cash", child: Text("Cash")),
+                          DropdownMenuItem(value: "Card", child: Text("Card")),
+                          DropdownMenuItem(
+                              value: "Net Banking", child: Text("Net Banking")),
+                          DropdownMenuItem(
+                              value: "Cheque", child: Text("Cheque")),
+                        ],
                         // After selecting the desired option,it will
                         // change button value to selected value
                         onChanged: (String? newValue) {
                           setState(() {
-                            dropdown = newValue!;
+                            SelectedItemPay = newValue!;
                           });
                         },
                       ),
@@ -356,45 +356,52 @@ class _AddDataState extends State<AddData> {
               SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(AppString.textAddStatus),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  Container(
-                    width: 210,
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        // Initial Value
-                        value: drop,
-
-                        // Down Arrow Icon
-                        icon: const Icon(
-                          Icons.arrow_drop_down_rounded,
-                          color: AppColor.colorBlue,
+              SelectedItemPay == 'Cheque'
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(AppString.textAddStatus),
+                        SizedBox(
+                          width: 30,
                         ),
+                        Container(
+                          width: 210,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              // Initial Value
+                              value: SelectedItemStatus,
 
-                        // Array list of items
-                        items: status.map((String status) {
-                          return DropdownMenuItem(
-                            value: status,
-                            child: Text(status),
-                          );
-                        }).toList(),
-                        // After selecting the desired option,it will
-                        // change button value to selected value
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            drop = newValue!;
-                          });
-                        },
-                      ),
+                              // Down Arrow Icon
+                              icon: const Icon(
+                                Icons.arrow_drop_down_rounded,
+                                color: AppColor.colorBlue,
+                              ),
+
+                              // Array list of items
+                              items: [
+                                DropdownMenuItem(
+                                    value: "Clear", child: Text("Clear")),
+                                DropdownMenuItem(
+                                    value: "Under Process",
+                                    child: Text("Under Process")),
+                                DropdownMenuItem(
+                                    value: "Reject", child: Text("Reject")),
+                              ],
+                              // After selecting the desired option,it will
+                              // change button value to selected value
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  SelectedItemStatus = newValue!;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox(
+                      height: 20,
                     ),
-                  ),
-                ],
-              ),
               SizedBox(
                 height: 20,
               ),

@@ -29,7 +29,8 @@ class SignUpModel {
 /// ADD DATA
 
 class AddDataModel {
-  String? id;
+  int? id;
+  String? userId;
   String? date;
   String? time;
   String? type;
@@ -41,6 +42,7 @@ class AddDataModel {
 
   AddDataModel(
       {this.id,
+      this.userId,
       this.date,
       this.time,
       this.type,
@@ -52,6 +54,7 @@ class AddDataModel {
 
   AddDataModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    userId = json['userId'];
     date = json['date'];
     time = json['time'];
     type = json['type'];
@@ -65,6 +68,7 @@ class AddDataModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['userId'] = this.userId;
     data['date'] = this.date;
     data['time'] = this.time;
     data['type'] = this.type;

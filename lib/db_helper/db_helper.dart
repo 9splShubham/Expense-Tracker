@@ -1,7 +1,5 @@
-import 'package:expense_tracker/core/app_config.dart';
 import 'package:expense_tracker/model/model.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'dart:io' as io;
@@ -13,7 +11,7 @@ class DbHelper {
   /// SIGN UP
 
   static const String DB_Name = 'MYData';
-  static const int Version = 11;
+  static const int Version = 10;
   static const String Table_SignUpData = 'signUpData';
   static const String S_ID = 'id';
   static const String UserID = 'userId';
@@ -23,7 +21,8 @@ class DbHelper {
 
   /// ADD DATA
   static const String Table_UserData = 'userData';
-  static const String ID = 'id';
+  static const String U_ID = 'id';
+  static const String U_UserID = 'userId';
   static const String U_Date = 'date';
   static const String U_Time = 'time';
   static const String U_Type = 'type';
@@ -58,7 +57,8 @@ class DbHelper {
         ")");
 
     await db.execute("CREATE TABLE $Table_UserData ("
-        " $ID TEXT  , "
+        " $U_ID INTEGER PRIMARY KEY  , "
+        " $U_UserID TEXT  , "
         " $U_Date TEXT, "
         " $U_Time TEXT ,"
         " $U_Type TEXT,"
@@ -83,23 +83,17 @@ class DbHelper {
     var res = await dbClient.insert(Table_UserData, user.toJson());
     return res;
   }
-/*  Future<void> insertData(Type, PaymentMethod, AddStatus) async {
-    var dbClient = await db;
-    await dbClient.rawQuery(
-        '''INSERT INTO $Table_UserData ($U_Type,$U_PaymentMethod,$U_Status) VALUES ('$Type','$PaymentMethod','$AddStatus',)  ''');
-  }*/
 
-/*  Future<void> insertPayment(String? newValue) async {
+  Future<List<AddDataModel>> getItems(String? token) async {
     var dbClient = await db;
-    await dbClient.rawQuery(
-        '''INSERT INTO $Table_UserData ($U_PaymentMethod) VALUES ('$newValue')  ''');
-    */ /* await dbClient.insert(Table_UserData, {U_PaymentMethod: newValue});*/ /*
+    var res = await dbClient
+        .rawQuery("SELECT * FROM $Table_UserData WHERE $U_UserID = ?", [token]);
+    try {
+      List<AddDataModel> mAddDataModel = List<AddDataModel>.from(
+          res.map((model) => AddDataModel.fromJson(model)));
+      return mAddDataModel;
+    } catch (e) {
+      return [];
+    }
   }
-
-  Future<void> insertStatus(String? newValue) async {
-    var dbClient = await db;
-    await dbClient.rawQuery(
-        '''INSERT INTO $Table_UserData ($U_Status) VALUES ('$newValue')  ''');
-*/ /*    await dbClient.insert(Table_UserData, {U_Status: newValue});*/ /*
-  }*/
 }

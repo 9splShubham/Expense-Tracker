@@ -1,12 +1,18 @@
 import 'package:expense_tracker/core/app_color.dart';
+import 'package:expense_tracker/core/app_config.dart';
+import 'package:expense_tracker/core/app_fonts.dart';
+import 'package:expense_tracker/core/app_size.dart';
 import 'package:expense_tracker/core/app_string.dart';
+import 'package:expense_tracker/db_helper/db_helper.dart';
 import 'package:expense_tracker/history_screen/history_screen.dart';
+import 'package:expense_tracker/model/model.dart';
 import 'package:expense_tracker/screens/add_data.dart';
 import 'package:expense_tracker/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -16,6 +22,25 @@ class Dashboard extends StatefulWidget {
 }
 
 class _Dashboard extends State<Dashboard> {
+  List<AddDataModel> mAddDataModel = [];
+
+  late DbHelper dbHelper;
+  @override
+  void initState() {
+    initData();
+    dbHelper = DbHelper();
+    super.initState();
+  }
+
+  void initData() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    dbHelper = DbHelper();
+    print('mAddDataModel----${mAddDataModel.length}');
+    mAddDataModel = await dbHelper.getItems(sp.getString(AppConfig.textUserId));
+    print('object--mProductModel---${mAddDataModel.length}');
+    setState(() {});
+  }
+
   ///Pie Chart
 
   Map<String, double> dataMap = {
@@ -199,6 +224,81 @@ class _Dashboard extends State<Dashboard> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: mAddDataModel.length,
+                    physics: ScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      AddDataModel item = mAddDataModel[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 3, color: Colors.blue),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            AppString.textCategory,
+                                            style: getTextStyle(
+                                                AppFonts.semiBoldBlack,
+                                                AppSize.textSize15),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(item.category!),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(item.date!),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(item.time!),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        item.note!,
+                                        style: getTextStyle(
+                                            AppFonts.regularGrey,
+                                            AppSize.textSize15),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text(item.amount.toString()),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+              )
             ],
           ),
         ),
