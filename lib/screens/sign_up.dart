@@ -102,7 +102,7 @@ class _SignUpState extends State<SignUp> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: AppString.textFullName,
+                labelText: AppString.textFullName,
                 hintStyle:
                     getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
@@ -115,7 +115,7 @@ class _SignUpState extends State<SignUp> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: AppString.textEmailAddress,
+                labelText: AppString.textEmailAddress,
                 hintStyle:
                     getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
@@ -128,7 +128,7 @@ class _SignUpState extends State<SignUp> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: AppString.textPassword,
+                labelText: AppString.textPassword,
                 hintStyle:
                     getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),

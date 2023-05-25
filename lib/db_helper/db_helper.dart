@@ -96,4 +96,10 @@ class DbHelper {
       return [];
     }
   }
+
+  Future<List<Map<String, dynamic>>> getAllData() async {
+    var dbClient = await db;
+    var res = await dbClient.rawQuery('''SELECT * FROM $Table_UserData''');
+    return res;
+  }
 }

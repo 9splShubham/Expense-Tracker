@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: AppString.textEmailAddress,
+                labelText: AppString.textEmailAddress,
                 hintStyle:
                     getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: InputDecoration(
                 filled: true,
                 border: OutlineInputBorder(),
-                hintText: AppString.textPassword,
+                labelText: AppString.textPassword,
                 hintStyle:
                     getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),

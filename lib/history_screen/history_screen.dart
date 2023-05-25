@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/app_color.dart';
 import 'package:expense_tracker/core/app_string.dart';
+import 'package:expense_tracker/db_helper/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -11,6 +12,24 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  late DbHelper dbHelper;
+  List<Map<String, dynamic>> DbData = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    dbHelper = DbHelper();
+    fetchDataFromDb();
+    super.initState();
+  }
+
+  void fetchDataFromDb() async {
+    final data = await dbHelper.getAllData();
+    setState(() {
+      DbData = data;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +73,39 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 20,
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                    columns: [
+                      DataColumn(label: Text("ID")),
+                      DataColumn(label: Text("DATE")),
+                      DataColumn(label: Text("TIME")),
+                      DataColumn(label: Text("TYPE")),
+                      DataColumn(label: Text("AMOUNT")),
+                      DataColumn(label: Text("CATEGORY")),
+                      DataColumn(label: Text("PAYMENT")),
+                      DataColumn(label: Text("STATUS")),
+                      DataColumn(label: Text("NOTE")),
+                    ],
+                    rows: DbData.map((row) {
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(row['id'].toString())),
+                          DataCell(Text(row['date'].toString())),
+                          DataCell(Text(row['time'].toString())),
+                          DataCell(Text(row['type'].toString())),
+                          DataCell(Text(row['amount'].toString())),
+                          DataCell(Text(row['category'].toString())),
+                          DataCell(Text(row['payment'].toString())),
+                          DataCell(Text(row['status'].toString())),
+                          DataCell(Text(row['note'].toString())),
+                        ],
+                      );
+                    }).toList()),
+              )
             ],
           ),
         ),
