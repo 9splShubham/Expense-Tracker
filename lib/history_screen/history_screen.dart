@@ -54,7 +54,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               Container(
                 height: 50,
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColor.colorBlue),
+                  border: Border.all(color: AppColor.colorBlue, width: 5),
                 ),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
@@ -64,8 +64,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       Text(AppString.textMonth),
                       Icon(Icons.arrow_drop_down_sharp),
                       VerticalDivider(
-                        width: 10,
                         color: AppColor.colorBlue,
+                        thickness: 5,
                       ),
                       Text(AppString.textYear),
                       Icon(Icons.arrow_drop_down_sharp),
@@ -79,6 +79,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
+                    border: TableBorder.all(
+                      color: AppColor.colorBlue,
+                    ),
                     columns: [
                       DataColumn(label: Text("ID")),
                       DataColumn(label: Text("DATE")),

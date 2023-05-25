@@ -143,7 +143,7 @@ class _Dashboard extends State<Dashboard> {
               Container(
                 height: 50,
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColor.colorBlue),
+                  border: Border.all(color: AppColor.colorBlue, width: 5),
                 ),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
@@ -153,7 +153,7 @@ class _Dashboard extends State<Dashboard> {
                       Text(AppString.textMonth),
                       Icon(Icons.arrow_drop_down_sharp),
                       VerticalDivider(
-                        width: 5,
+                        thickness: 5,
                         color: AppColor.colorBlue,
                       ),
                       Text(AppString.textYear),
@@ -238,7 +238,7 @@ class _Dashboard extends State<Dashboard> {
                         padding: EdgeInsets.symmetric(vertical: 10),
                         child: Container(
                           decoration: BoxDecoration(
-                            border: Border.all(width: 3, color: Colors.blue),
+                            border: Border.all(width: 2, color: Colors.blue),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Padding(
