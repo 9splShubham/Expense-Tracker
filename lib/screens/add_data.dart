@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/app_string.dart';
 import 'package:expense_tracker/core/com_helper/com_helper.dart';
 import 'package:expense_tracker/db_helper/db_helper.dart';
 import 'package:expense_tracker/model/model.dart';
+import 'package:expense_tracker/screens/bottom_sheet/bottom_sheet_add_data.dart';
 import 'package:expense_tracker/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -20,12 +21,13 @@ class AddData extends StatefulWidget {
 
 class _AddDataState extends State<AddData> {
   /// Initial Selected Value
-  String dropdownvalue = 'Income';
+  String Type = 'Income';
 
   String Category = 'Food';
+  String Payment = 'Cash';
 
   /// List of items in our dropdown menu
-  var items = ['Income', 'Expense'];
+  var type = ['Income', 'Expense'];
 
   var category = [
     'Food',
@@ -34,6 +36,13 @@ class _AddDataState extends State<AddData> {
     'Education',
     'Transport',
     'Health'
+  ];
+
+  var payment = [
+    'Cash',
+    'Card',
+    'Net Banking',
+    'Cheque',
   ];
 
   /// DATE
@@ -80,6 +89,8 @@ class _AddDataState extends State<AddData> {
   late TextEditingController timeController = TextEditingController();
   late TextEditingController amountController = TextEditingController();
   late TextEditingController noteController = TextEditingController();
+  late TextEditingController textController = TextEditingController();
+  late TextEditingController payController = TextEditingController();
 
   void AddDataInDb() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -94,26 +105,27 @@ class _AddDataState extends State<AddData> {
     aModel.userId = sp.getString(AppConfig.textUserId);
     aModel.date = Date;
     aModel.time = Time;
-    aModel.type = dropdownvalue;
+    aModel.type = Type;
     aModel.amount = int.parse(Amount);
     aModel.category = Category;
-    aModel.paymentMethod = SelectedItemPay;
+    aModel.paymentMethod = Payment;
     aModel.status = SelectedItemStatus;
     aModel.note = Note;
 
     dbHelper = DbHelper();
-    await dbHelper.insertData(aModel).then((value) {
+    await dbHelper.insertData(aModel).catchError((error) {
+      print('${error}');
+      alertDialog("Error: Data Save Fail--$error");
+    }).then((value) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Dashboard()));
     }).then((value) {
       alertDialog(AppString.textAddeddatasuccessfully);
-    }).catchError((error) {
-      print('${error}');
     });
   }
 
-  String? SelectedItemPay;
   String? SelectedItemStatus;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,7 +208,7 @@ class _AddDataState extends State<AddData> {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton(
                         // Initial Value
-                        value: dropdownvalue,
+                        value: Type,
 
                         // Down Arrow Icon
                         icon: const Icon(
@@ -205,17 +217,17 @@ class _AddDataState extends State<AddData> {
                         ),
 
                         // Array list of items
-                        items: items.map((String items) {
+                        items: type.map((String type) {
                           return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
+                            value: type,
+                            child: Text(type),
                           );
                         }).toList(),
                         // After selecting the desired option,it will
                         // change button value to selected value
                         onChanged: (String? newValue) {
                           setState(() {
-                            dropdownvalue = newValue!;
+                            Type = newValue!;
                           });
                         },
                       ),
@@ -251,10 +263,121 @@ class _AddDataState extends State<AddData> {
                 children: [
                   Text(AppString.textCategory),
                   SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    child: Icon(
+                      Icons.add_circle_outline_outlined,
+                      color: AppColor.colorBlue,
+                    ),
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (builder) {
+                            return Scaffold(
+                              body: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          "Enter Your Text",
+                                          style: getTextStyle(
+                                              AppFonts.semiBoldBlack,
+                                              AppSize.textSize20),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      SizedBox(
+                                        height: 70,
+                                        child: TextField(
+                                          keyboardType: TextInputType.multiline,
+                                          controller: textController,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            filled: true,
+                                            fillColor: Colors.blue[100],
+                                            hintText: "Type your text here",
+                                            hintStyle: getTextStyle(
+                                                AppFonts.regularGrey,
+                                                AppSize.textSize14),
+                                          ),
+                                          style: const TextStyle(),
+                                          maxLines: 10,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SizedBox(
+                                            height: 50,
+                                            width: 160,
+                                            child: ElevatedButton(
+                                              child: Text(
+                                                "Cancel",
+                                                style: getTextStyle(
+                                                  AppFonts.regularBlue,
+                                                  AppSize.textSize16,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: AppColor.colorWhite,
+                                                  side: const BorderSide(
+                                                      color: AppColor.colorBlue,
+                                                      width: 2)),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 50,
+                                            width: 160,
+                                            child: ElevatedButton(
+                                              child: Text("Add",
+                                                  style: getTextStyle(
+                                                      AppFonts.regular,
+                                                      AppSize.textSize16)),
+                                              style: ElevatedButton.styleFrom(
+                                                primary: AppColor.colorBlue,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  String newOption =
+                                                      '${textController.text}';
+                                                  category.add(newOption);
+                                                  Category = newOption;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                  ),
+                  SizedBox(
                     width: 30,
                   ),
                   Container(
-                    width: 250,
+                    width: 240,
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton(
                         // Initial Value
@@ -283,30 +406,6 @@ class _AddDataState extends State<AddData> {
                       ),
                     ),
                   ),
-                  /*SizedBox(
-                    height: 20,
-                    width: 250,
-                    child: InkWell(
-                      child: TextFormField(
-                        enabled: false,
-                        decoration: InputDecoration(
-                          hintText: AppString.textSelectCategory,
-                        ),
-                      ),
-                      onTap: () {
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return BottomSheetSelect();
-                            });
-                      },
-                    ),
-                  ),*/
-                  /*    Icon(
-                    Icons.arrow_drop_down_sharp,
-                    color: AppColor.colorBlue,
-                  )*/
                 ],
               ),
               SizedBox(
@@ -317,14 +416,125 @@ class _AddDataState extends State<AddData> {
                 children: [
                   Text(AppString.textPaymentMethod),
                   SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    child: Icon(
+                      Icons.add_circle_outline_outlined,
+                      color: AppColor.colorBlue,
+                    ),
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (builder) {
+                            return Scaffold(
+                              body: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          "Enter Your Text",
+                                          style: getTextStyle(
+                                              AppFonts.semiBoldBlack,
+                                              AppSize.textSize20),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      SizedBox(
+                                        height: 70,
+                                        child: TextField(
+                                          keyboardType: TextInputType.multiline,
+                                          controller: payController,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            filled: true,
+                                            fillColor: Colors.blue[100],
+                                            hintText: "Type your text here",
+                                            hintStyle: getTextStyle(
+                                                AppFonts.regularGrey,
+                                                AppSize.textSize14),
+                                          ),
+                                          style: const TextStyle(),
+                                          maxLines: 10,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SizedBox(
+                                            height: 50,
+                                            width: 160,
+                                            child: ElevatedButton(
+                                              child: Text(
+                                                "Cancel",
+                                                style: getTextStyle(
+                                                  AppFonts.regularBlue,
+                                                  AppSize.textSize16,
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: AppColor.colorWhite,
+                                                  side: const BorderSide(
+                                                      color: AppColor.colorBlue,
+                                                      width: 2)),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 50,
+                                            width: 160,
+                                            child: ElevatedButton(
+                                              child: Text("Add",
+                                                  style: getTextStyle(
+                                                      AppFonts.regular,
+                                                      AppSize.textSize16)),
+                                              style: ElevatedButton.styleFrom(
+                                                primary: AppColor.colorBlue,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  String newOption =
+                                                      '${payController.text}';
+                                                  payment.add(newOption);
+                                                  Payment = newOption;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                  ),
+                  SizedBox(
                     width: 30,
                   ),
                   Container(
-                    width: 210,
+                    width: 190,
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         // Initial Value
-                        value: SelectedItemPay,
+                        value: Payment,
 
                         // Down Arrow Icon
                         icon: const Icon(
@@ -333,19 +543,16 @@ class _AddDataState extends State<AddData> {
                         ),
 
                         // Array list of items
-                        items: [
-                          DropdownMenuItem(value: "Cash", child: Text("Cash")),
-                          DropdownMenuItem(value: "Card", child: Text("Card")),
-                          DropdownMenuItem(
-                              value: "Net Banking", child: Text("Net Banking")),
-                          DropdownMenuItem(
-                              value: "Cheque", child: Text("Cheque")),
-                        ],
-                        // After selecting the desired option,it will
-                        // change button value to selected value
+                        items: payment.map((String payment) {
+                          return DropdownMenuItem(
+                            value: payment,
+                            child: Text(payment),
+                          );
+                        }).toList(),
+
                         onChanged: (String? newValue) {
                           setState(() {
-                            SelectedItemPay = newValue!;
+                            Payment = newValue!;
                           });
                         },
                       ),
@@ -356,7 +563,7 @@ class _AddDataState extends State<AddData> {
               SizedBox(
                 height: 20,
               ),
-              SelectedItemPay == 'Cheque'
+              Payment == 'Cheque'
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -442,10 +649,6 @@ class _AddDataState extends State<AddData> {
                   },
                 ),
               ),
-              /*          SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(onPressed: () {}, child: Text("Add")))*/
             ],
           ),
         ),
