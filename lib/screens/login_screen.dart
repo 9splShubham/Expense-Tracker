@@ -32,7 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
     FirebaseAuth.instance
         .signInWithEmailAndPassword(
             email: emailController.text, password: passwordController.text)
-        .then((value) {
+        .catchError((error) {
+      print(error);
+      alertDialog("Error: Data Save Fail--$error");
+    }).then((value) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Dashboard()));
     }).then((value) {

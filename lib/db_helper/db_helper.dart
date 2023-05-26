@@ -102,4 +102,10 @@ class DbHelper {
     var res = await dbClient.rawQuery('''SELECT * FROM $Table_UserData''');
     return res;
   }
+
+  Future<int> deleteData(int? id) async {
+    var dbClient = await db;
+    return await dbClient
+        .rawDelete('DELETE FROM $Table_UserData WHERE $U_ID = ?', [id]);
+  }
 }
