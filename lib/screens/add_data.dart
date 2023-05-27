@@ -100,30 +100,40 @@ class _AddDataState extends State<AddData> {
     String Amount = amountController.text;
     String Note = noteController.text;
 
-    AddDataModel aModel = AddDataModel();
 
-    aModel.userId = sp.getString(AppConfig.textUserId);
-    aModel.date = Date;
-    aModel.time = Time;
-    aModel.type = Type;
-    aModel.amount = int.parse(Amount);
-    aModel.category = Category;
-    aModel.paymentMethod = Payment;
-    aModel.status = SelectedItemStatus;
-    aModel.note = Note;
+    if (Date.isEmpty) {
+      alertDialog("Please Enter Date");
+    } else if (Time.isEmpty) {
+      alertDialog("Please Enter Time");
+    } else if (Amount.isEmpty) {
+      alertDialog("Please Enter Amount");
+    } else if (Note.isEmpty) {
+      alertDialog("Please Enter Note");
+    } else {
+      AddDataModel aModel = AddDataModel();
 
-    dbHelper = DbHelper();
-    await dbHelper.insertData(aModel).catchError((error) {
-      print('${error}');
-      alertDialog("Error: Data Save Fail--$error");
-    }).then((value) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Dashboard()));
-    }).then((value) {
-      alertDialog(AppString.textAddeddatasuccessfully);
-    });
+      aModel.userId = sp.getString(AppConfig.textUserId);
+      aModel.date = Date;
+      aModel.time = Time;
+      aModel.type = Type;
+      aModel.amount = int.parse(Amount);
+      aModel.category = Category;
+      aModel.paymentMethod = Payment;
+      aModel.status = SelectedItemStatus;
+      aModel.note = Note;
+
+      dbHelper = DbHelper();
+      await dbHelper.insertData(aModel).catchError((error) {
+        print('${error}');
+        alertDialog("Error: Data Save Fail--$error");
+      }).then((value) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Dashboard()));
+      }).then((value) {
+        alertDialog(AppString.textAddeddatasuccessfully);
+      });
+    }
   }
-
   String? SelectedItemStatus;
 
   @override

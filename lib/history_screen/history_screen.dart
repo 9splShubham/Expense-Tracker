@@ -77,34 +77,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 height: 20,
               ),
               SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+                scrollDirection: Axis.vertical,
                 child: DataTable(
                     border: TableBorder.all(
                       color: AppColor.colorBlue,
                     ),
                     columns: [
-                      DataColumn(label: Text("ID")),
+                      /*DataColumn(label: Text("ID")),*/
                       DataColumn(label: Text("DATE")),
-                      DataColumn(label: Text("TIME")),
-                      DataColumn(label: Text("TYPE")),
+               /*       DataColumn(label: Text("TIME")),*/
+
                       DataColumn(label: Text("AMOUNT")),
-                      DataColumn(label: Text("CATEGORY")),
+                      DataColumn(label: Text("TYPE")),
+ /*                     DataColumn(label: Text("CATEGORY")),
                       DataColumn(label: Text("PAYMENT")),
                       DataColumn(label: Text("STATUS")),
-                      DataColumn(label: Text("NOTE")),
+                      DataColumn(label: Text("NOTE")),*/
                     ],
                     rows: DbData.map((row) {
                       return DataRow(
                         cells: [
-                          DataCell(Text(row['id'].toString())),
+                     /*     DataCell(Text(row['id'].toString())),*/
                           DataCell(Text(row['date'].toString())),
-                          DataCell(Text(row['time'].toString())),
-                          DataCell(Text(row['type'].toString())),
+                    /*      DataCell(Text(row['time'].toString())),*/
+
                           DataCell(Text(row['amount'].toString())),
-                          DataCell(Text(row['category'].toString())),
+                          DataCell(Text(row['type'].toString())),
+                 /*         DataCell(Text(row['category'].toString())),
                           DataCell(Text(row['payment'].toString())),
                           DataCell(Text(row['status'].toString())),
-                          DataCell(Text(row['note'].toString())),
+                          DataCell(Text(row['note'].toString())),*/
                         ],
                       );
                     }).toList()),

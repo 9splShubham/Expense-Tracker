@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 class Data extends StatelessWidget {
   final AddDataModel item;
   final Function onDelete;
+
   const Data({Key? key, required this.item, required this.onDelete})
       : super(key: key);
 
@@ -68,7 +69,14 @@ class Data extends StatelessWidget {
                   ],
                 ),
               ),
-              Text(item.amount.toString()),
+
+              Row(
+                children: [
+                  Text(item.amount.toString(),),
+                  SizedBox(width: 10,),
+                  Text("Rs"),
+                ],
+              ),
               InkWell(
                 child: const Icon(
                   Icons.delete,
@@ -108,6 +116,7 @@ class Data extends StatelessWidget {
       onTap: () {
         Navigator.of(context, rootNavigator: true).pop();
         onDelete();
+
       },
     );
     // set up the AlertDialog

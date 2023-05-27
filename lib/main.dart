@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         navigatorKey: NavigatorKey.navigatorKey,
+
         home: /*LoginScreen(),*/ StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {

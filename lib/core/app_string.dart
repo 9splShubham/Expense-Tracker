@@ -2,7 +2,8 @@ class AppString {
   static const textProvider = 'Provider';
 
   /// SIGN UP
-  static const textSIGNUP = 'SIGN UP';
+  static const textCreateAnAccount = 'Create an account';
+  static const textREGISTER = 'REGISTER';
   static const textFullName = 'Full Name';
   static const textEmailAddress = 'Email Address';
   static const textPassword = 'Password';
@@ -10,6 +11,7 @@ class AppString {
 
   ///  LOGIN
   static const textLOGIN = 'LOGIN';
+  static const textWelcome = 'Welcome back';
   static const textSuccessfullyLoggedIn = 'Successfully Logged In';
   static const textDonthaveanaccount = 'Dont have an account ?';
   static const textRegisterNow = ' Register Now';

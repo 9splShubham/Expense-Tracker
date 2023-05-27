@@ -25,9 +25,12 @@ class Dashboard extends StatefulWidget {
 class _Dashboard extends State<Dashboard> {
   List<AddDataModel> mAddDataModel = [];
 
+
   late DbHelper dbHelper;
   @override
   void initState() {
+    income();
+    expense();
     initData();
     dbHelper = DbHelper();
     super.initState();
@@ -39,13 +42,16 @@ class _Dashboard extends State<Dashboard> {
     print('mAddDataModel----${mAddDataModel.length}');
     mAddDataModel = await dbHelper.getItems(sp.getString(AppConfig.textUserId));
     print('object--mProductModel---${mAddDataModel.length}');
-    setState(() {});
+    setState(() {
+
+    });
   }
 
   removeData(int index) async {
     dbHelper = DbHelper();
     await dbHelper.deleteData(mAddDataModel[index].id);
     initData();
+
   }
 
   ///Pie Chart
@@ -63,6 +69,27 @@ class _Dashboard extends State<Dashboard> {
     const Color(0xFF49ae26),
     const Color(0xFFe88322),
   ];
+
+
+
+int totalIncome=0;
+  void income()async{
+    dbHelper = DbHelper();
+   int income = await dbHelper.calaculateIncome();
+    setState(() {
+totalIncome = income;
+    });
+  }
+
+  int totalExpense =0;
+  void expense()async{
+    dbHelper = DbHelper();
+    int expense = await dbHelper.calculateExpense();
+    setState(() {
+      totalExpense = expense;
+    });
+  }
+
 
   final user = FirebaseAuth.instance.currentUser;
 
@@ -110,7 +137,7 @@ class _Dashboard extends State<Dashboard> {
                       MaterialPageRoute(
                         builder: (context) => const LoginScreen(),
                       ),
-                      (route) => false).then((value) {});
+                          (route) => false).then((value) {});
                 });
               },
             ),
@@ -139,6 +166,7 @@ class _Dashboard extends State<Dashboard> {
       appBar: AppBar(
         title: const Text(AppString.textDashboard),
       ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -172,7 +200,7 @@ class _Dashboard extends State<Dashboard> {
               const SizedBox(
                 height: 10,
               ),
-              const SizedBox(
+               SizedBox(
                 width: double.infinity,
                 height: 100,
                 child: Card(
@@ -186,14 +214,14 @@ class _Dashboard extends State<Dashboard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(AppString.textIncome),
-                            Text(AppString.textRS10000),
+                            Text('RS : $totalIncome',style: TextStyle(color: AppColor.colorGreen),),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(AppString.textExpense),
-                            Text(AppString.textRS5000),
+                            Text('RS : $totalExpense',style: TextStyle(color: AppColor.colorRed)),
                           ],
                         ),
                       ],
@@ -210,6 +238,7 @@ class _Dashboard extends State<Dashboard> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       PieChart(
                         dataMap: dataMap,
                         colorList: colorList,

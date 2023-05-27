@@ -99,7 +99,7 @@ class DbHelper {
 
   Future<List<Map<String, dynamic>>> getAllData() async {
     var dbClient = await db;
-    var res = await dbClient.rawQuery('''SELECT * FROM $Table_UserData''');
+    var res = await dbClient.rawQuery('''SELECT $U_Date,$U_Amount,$U_Type FROM $Table_UserData''');
     return res;
   }
 
@@ -107,5 +107,19 @@ class DbHelper {
     var dbClient = await db;
     return await dbClient
         .rawDelete('DELETE FROM $Table_UserData WHERE $U_ID = ?', [id]);
+  }
+
+  Future<int> calaculateIncome() async {
+    var dbClient = await db;
+    var res = await dbClient
+        .rawQuery('''SELECT SUM($U_Amount) FROM $Table_UserData WHERE $U_Type='Income'  ''');
+   return  res.first['SUM($U_Amount)'] as int;
+  }
+
+  Future<int> calculateExpense() async {
+    var dbClient = await db;
+    var res = await dbClient
+        .rawQuery('''SELECT SUM($U_Amount) FROM $Table_UserData WHERE $U_Type='Expense'  ''');
+    return  res.first['SUM($U_Amount)'] as int;
   }
 }

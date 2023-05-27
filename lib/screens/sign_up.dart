@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/app_color.dart';
 import 'package:expense_tracker/core/app_config.dart';
 import 'package:expense_tracker/core/app_fonts.dart';
 import 'package:expense_tracker/core/app_size.dart';
@@ -21,10 +22,13 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   @override
   late DbHelper dbHelper;
+  bool passwordVisible = false;
+
 
   void initState() {
     super.initState();
     dbHelper = DbHelper();
+    passwordVisible = true;
   }
 
   final nameController = TextEditingController();
@@ -79,18 +83,145 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColor.colorWhite,
+        elevation: 0,
         leading: InkWell(
-          child: Icon(Icons.arrow_back),
+          child: Icon(Icons.arrow_back,color: AppColor.colorBlue,),
           onTap: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => LoginScreen()));
           },
         ),
-        title: const Text(AppString.textSIGNUP),
+
       ),
-      body: Padding(
+      body:SingleChildScrollView(
+        child: Container(
+          height:700,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+                AppColor.colorDarkBlue,
+                AppColor.colorBlue,
+                AppColor.colorLightBlue,
+              ])),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 80,
+                    ),
+                    Text(
+                      AppString.textCreateAnAccount,
+                      style: getTextStyle(AppFonts.semiBold, AppSize.textSize25),
+                    ),
+
+                    SizedBox(
+                      height: 80,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: AppColor.colorWhite,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(60),
+                          topRight: Radius.circular(60))),
+
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 50,
+                        ),
+                        TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.person_2_outlined,color: AppColor.colorBlue,),
+                            filled: true,
+                            border: OutlineInputBorder(  borderRadius: BorderRadius.circular(30)),
+                            hintText: AppString.textFullName,
+                            hintStyle:
+                            getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.email_outlined,color: AppColor.colorBlue,),
+                            filled: true,
+                            border: OutlineInputBorder(  borderRadius: BorderRadius.circular(30)),
+                            hintText: AppString.textEmailAddress,
+                            hintStyle:
+                            getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextField(
+                          obscureText: passwordVisible,
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock_outline_sharp,color: AppColor.colorBlue,),
+                            filled: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30)
+                            ),
+                            hintText: AppString.textPassword,
+                            hintStyle:
+                            getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
+                              suffixIcon: IconButton(
+                                icon: Icon(passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    passwordVisible = !passwordVisible;
+                                  });
+
+                                },
+                              )
+                          ),
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        SizedBox(
+                            height: 50,
+                            width:270,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                SignUp();
+                                storeInDb();
+                              },
+                              child: Text(AppString.textREGISTER),style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      /*Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
@@ -100,9 +231,10 @@ class _SignUpState extends State<SignUp> {
             TextField(
               controller: nameController,
               decoration: InputDecoration(
+                prefixIcon: Icon(Icons.person_2_outlined,color: AppColor.colorBlue,),
                 filled: true,
-                border: OutlineInputBorder(),
-                labelText: AppString.textFullName,
+                border: OutlineInputBorder(  borderRadius: BorderRadius.circular(30)),
+                hintText: AppString.textFullName,
                 hintStyle:
                     getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
@@ -113,9 +245,10 @@ class _SignUpState extends State<SignUp> {
             TextField(
               controller: emailController,
               decoration: InputDecoration(
+                prefixIcon: Icon(Icons.email_outlined,color: AppColor.colorBlue,),
                 filled: true,
-                border: OutlineInputBorder(),
-                labelText: AppString.textEmailAddress,
+                border: OutlineInputBorder(  borderRadius: BorderRadius.circular(30)),
+                hintText: AppString.textEmailAddress,
                 hintStyle:
                     getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
@@ -126,9 +259,12 @@ class _SignUpState extends State<SignUp> {
             TextField(
               controller: passwordController,
               decoration: InputDecoration(
+                prefixIcon: Icon(Icons.lock_outline_sharp,color: AppColor.colorBlue,),
                 filled: true,
-                border: OutlineInputBorder(),
-                labelText: AppString.textPassword,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30)
+                ),
+                hintText: AppString.textPassword,
                 hintStyle:
                     getTextStyle(AppFonts.regularGrey, AppSize.textSize15),
               ),
@@ -138,16 +274,16 @@ class _SignUpState extends State<SignUp> {
             ),
             SizedBox(
                 height: 50,
-                width: double.infinity,
+                width:270,
                 child: ElevatedButton(
                     onPressed: () {
                       SignUp();
                       storeInDb();
                     },
-                    child: Text(AppString.textSIGNUP))),
+                    child: Text(AppString.textREGISTER),style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),)),
           ],
         ),
-      ),
+      ),*/
     );
   }
 }
