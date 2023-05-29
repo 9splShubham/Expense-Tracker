@@ -19,16 +19,59 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     // TODO: implement initState
     dbHelper = DbHelper();
-    fetchDataFromDb();
+    fetchMonthData();
+    fetchYearData();
+    /*fetchDataFromDb();*/
     super.initState();
   }
 
-  void fetchDataFromDb() async {
+  /* void fetchDataFromDb() async {
     final data = await dbHelper.getAllData();
     setState(() {
       DbData = data;
     });
+  }*/
+  void fetchMonthData() async {
+    final data = await dbHelper.selectMonthFromDatabase(Month);
+    setState(() {
+      DbData = data;
+    });
   }
+
+  void fetchYearData() async {
+    final data = await dbHelper.selectMonthFromDatabase(Year);
+    setState(() {
+      DbData = data;
+    });
+  }
+
+  String Month = 'January';
+  String Year = '2015';
+  var month = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  var year = [
+    '2015',
+    '2016',
+    '2017',
+    '2018',
+    '2019',
+    '2020',
+    '2021',
+    '2022',
+    '2023',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -56,19 +99,76 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColor.colorBlue, width: 5),
                 ),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(AppString.textMonth),
-                      Icon(Icons.arrow_drop_down_sharp),
+                      Container(
+                        width: 160,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            // Initial Value
+                            value: Month,
+
+                            // Down Arrow Icon
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
+                              color: AppColor.colorBlue,
+                            ),
+
+                            // Array list of items
+                            items: month.map((String month) {
+                              return DropdownMenuItem(
+                                value: month,
+                                child: Text(month),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                Month = newValue!;
+                                fetchMonthData();
+                              });
+                            },
+                          ),
+                        ),
+                      ),
                       VerticalDivider(
                         color: AppColor.colorBlue,
                         thickness: 5,
                       ),
-                      Text(AppString.textYear),
-                      Icon(Icons.arrow_drop_down_sharp),
+                      Container(
+                        width: 160,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            // Initial Value
+                            value: Year,
+
+                            // Down Arrow Icon
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
+                              color: AppColor.colorBlue,
+                            ),
+
+                            // Array list of items
+                            items: year.map((String year) {
+                              return DropdownMenuItem(
+                                value: year,
+                                child: Text(year),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                Year = newValue!;
+                                fetchYearData();
+                              });
+                            },
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -77,7 +177,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 height: 20,
               ),
               SingleChildScrollView(
-                scrollDirection: Axis.vertical,
+                scrollDirection: Axis.horizontal,
                 child: DataTable(
                     border: TableBorder.all(
                       color: AppColor.colorBlue,
@@ -85,11 +185,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     columns: [
                       /*DataColumn(label: Text("ID")),*/
                       DataColumn(label: Text("DATE")),
-               /*       DataColumn(label: Text("TIME")),*/
+                      /*       DataColumn(label: Text("TIME")),*/
 
                       DataColumn(label: Text("AMOUNT")),
                       DataColumn(label: Text("TYPE")),
- /*                     DataColumn(label: Text("CATEGORY")),
+                      /*   DataColumn(label: Text("PAYMENT")),
+                      DataColumn(label: Text("STATUS")),*/
+                      /*                     DataColumn(label: Text("CATEGORY")),
                       DataColumn(label: Text("PAYMENT")),
                       DataColumn(label: Text("STATUS")),
                       DataColumn(label: Text("NOTE")),*/
@@ -97,13 +199,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     rows: DbData.map((row) {
                       return DataRow(
                         cells: [
-                     /*     DataCell(Text(row['id'].toString())),*/
+                          /*     DataCell(Text(row['id'].toString())),*/
                           DataCell(Text(row['date'].toString())),
-                    /*      DataCell(Text(row['time'].toString())),*/
+                          /*      DataCell(Text(row['time'].toString())),*/
 
-                          DataCell(Text(row['amount'].toString())),
+                          DataCell(Text(
+                            row['amount'].toString(),
+                            style: TextStyle(
+                              color: (row['type'].toString() == 'Income'
+                                  ? AppColor.colorGreen
+                                  : AppColor.colorRed),
+                            ),
+                          )),
                           DataCell(Text(row['type'].toString())),
-                 /*         DataCell(Text(row['category'].toString())),
+                          /*     DataCell(Text(row['payment'].toString())),
+                          DataCell(Text(row['status'].toString())),*/
+                          /*         DataCell(Text(row['category'].toString())),
                           DataCell(Text(row['payment'].toString())),
                           DataCell(Text(row['status'].toString())),
                           DataCell(Text(row['note'].toString())),*/

@@ -1,7 +1,5 @@
 import 'package:expense_tracker/core/app_color.dart';
 import 'package:expense_tracker/core/app_config.dart';
-import 'package:expense_tracker/core/app_fonts.dart';
-import 'package:expense_tracker/core/app_size.dart';
 import 'package:expense_tracker/core/app_string.dart';
 import 'package:expense_tracker/db_helper/db_helper.dart';
 import 'package:expense_tracker/history_screen/history_screen.dart';
@@ -25,7 +23,6 @@ class Dashboard extends StatefulWidget {
 class _Dashboard extends State<Dashboard> {
   List<AddDataModel> mAddDataModel = [];
 
-
   late DbHelper dbHelper;
   @override
   void initState() {
@@ -42,16 +39,13 @@ class _Dashboard extends State<Dashboard> {
     print('mAddDataModel----${mAddDataModel.length}');
     mAddDataModel = await dbHelper.getItems(sp.getString(AppConfig.textUserId));
     print('object--mProductModel---${mAddDataModel.length}');
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   removeData(int index) async {
     dbHelper = DbHelper();
     await dbHelper.deleteData(mAddDataModel[index].id);
     initData();
-
   }
 
   ///Pie Chart
@@ -70,19 +64,17 @@ class _Dashboard extends State<Dashboard> {
     const Color(0xFFe88322),
   ];
 
-
-
-int totalIncome=0;
-  void income()async{
+  int totalIncome = 0;
+  void income() async {
     dbHelper = DbHelper();
-   int income = await dbHelper.calaculateIncome();
+    int income = await dbHelper.calaculateIncome();
     setState(() {
-totalIncome = income;
+      totalIncome = income;
     });
   }
 
-  int totalExpense =0;
-  void expense()async{
+  int totalExpense = 0;
+  void expense() async {
     dbHelper = DbHelper();
     int expense = await dbHelper.calculateExpense();
     setState(() {
@@ -90,9 +82,35 @@ totalIncome = income;
     });
   }
 
-
   final user = FirebaseAuth.instance.currentUser;
 
+  String Month = 'January';
+  String Year = '2015';
+  var month = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  var year = [
+    '2015',
+    '2016',
+    '2017',
+    '2018',
+    '2019',
+    '2020',
+    '2021',
+    '2022',
+    '2023',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,7 +155,7 @@ totalIncome = income;
                       MaterialPageRoute(
                         builder: (context) => const LoginScreen(),
                       ),
-                          (route) => false).then((value) {});
+                      (route) => false).then((value) {});
                 });
               },
             ),
@@ -166,7 +184,6 @@ totalIncome = income;
       appBar: AppBar(
         title: const Text(AppString.textDashboard),
       ),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -180,19 +197,75 @@ totalIncome = income;
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColor.colorBlue, width: 5),
                 ),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(AppString.textMonth),
-                      Icon(Icons.arrow_drop_down_sharp),
+                      Container(
+                        width: 160,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            // Initial Value
+                            value: Month,
+
+                            // Down Arrow Icon
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
+                              color: AppColor.colorBlue,
+                            ),
+
+                            // Array list of items
+                            items: month.map((String month) {
+                              return DropdownMenuItem(
+                                value: month,
+                                child: Text(month),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                Month = newValue!;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
                       VerticalDivider(
                         thickness: 5,
                         color: AppColor.colorBlue,
                       ),
-                      Text(AppString.textYear),
-                      Icon(Icons.arrow_drop_down_sharp),
+                      Container(
+                        width: 160,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            // Initial Value
+                            value: Year,
+
+                            // Down Arrow Icon
+                            icon: Icon(
+                              Icons.arrow_drop_down_sharp,
+                              color: AppColor.colorBlue,
+                            ),
+
+                            // Array list of items
+                            items: year.map((String year) {
+                              return DropdownMenuItem(
+                                value: year,
+                                child: Text(year),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                Year = newValue!;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -200,7 +273,7 @@ totalIncome = income;
               const SizedBox(
                 height: 10,
               ),
-               SizedBox(
+              SizedBox(
                 width: double.infinity,
                 height: 100,
                 child: Card(
@@ -214,14 +287,18 @@ totalIncome = income;
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(AppString.textIncome),
-                            Text('RS : $totalIncome',style: TextStyle(color: AppColor.colorGreen),),
+                            Text(
+                              'RS : $totalIncome',
+                              style: TextStyle(color: AppColor.colorGreen),
+                            ),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(AppString.textExpense),
-                            Text('RS : $totalExpense',style: TextStyle(color: AppColor.colorRed)),
+                            Text('RS : $totalExpense',
+                                style: TextStyle(color: AppColor.colorRed)),
                           ],
                         ),
                       ],
@@ -238,7 +315,6 @@ totalIncome = income;
                       const SizedBox(
                         height: 20,
                       ),
-
                       PieChart(
                         dataMap: dataMap,
                         colorList: colorList,

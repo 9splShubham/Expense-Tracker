@@ -69,12 +69,23 @@ class Data extends StatelessWidget {
                   ],
                 ),
               ),
-
               Row(
                 children: [
-                  Text(item.amount.toString(),),
-                  SizedBox(width: 10,),
-                  Text("Rs"),
+                  Text(
+                    item.amount.toString(),
+                    style: TextStyle(
+                      color: (item.type == 'Income'
+                          ? AppColor.colorGreen
+                          : AppColor.colorRed),
+                    ),
+                  )
+                  /*      Text(
+                    item.amount.toString(),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text("Rs"),*/
                 ],
               ),
               InkWell(
@@ -116,7 +127,6 @@ class Data extends StatelessWidget {
       onTap: () {
         Navigator.of(context, rootNavigator: true).pop();
         onDelete();
-
       },
     );
     // set up the AlertDialog

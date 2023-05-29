@@ -9,6 +9,7 @@ import 'package:expense_tracker/model/model.dart';
 import 'package:expense_tracker/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddData extends StatefulWidget {
@@ -51,7 +52,7 @@ class _AddDataState extends State<AddData> {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
+        firstDate: DateTime(2015, 1),
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -137,6 +138,7 @@ class _AddDataState extends State<AddData> {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = new DateFormat.yMMMMd().format(selectedDate);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppString.textAddData),
@@ -159,8 +161,8 @@ class _AddDataState extends State<AddData> {
                       width: 250,
                       child: TextFormField(
                         enabled: false,
-                        controller: dateController = TextEditingController(
-                            text: "${selectedDate.toLocal()}".split(' ')[0]),
+                        controller: dateController =
+                            TextEditingController(text: "${formattedDate}"),
                         style: TextStyle(color: AppColor.colorBlack),
                         decoration:
                             InputDecoration(hintText: AppString.textSelectDate),
@@ -228,7 +230,7 @@ class _AddDataState extends State<AddData> {
                         value: Type,
 
                         // Down Arrow Icon
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_drop_down_sharp,
                           color: AppColor.colorBlue,
                         ),
