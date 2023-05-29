@@ -6,7 +6,6 @@ import 'package:expense_tracker/core/app_string.dart';
 import 'package:expense_tracker/core/com_helper/com_helper.dart';
 import 'package:expense_tracker/db_helper/db_helper.dart';
 import 'package:expense_tracker/model/model.dart';
-import 'package:expense_tracker/screens/bottom_sheet/bottom_sheet_add_data.dart';
 import 'package:expense_tracker/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -100,7 +99,6 @@ class _AddDataState extends State<AddData> {
     String Amount = amountController.text;
     String Note = noteController.text;
 
-
     if (Date.isEmpty) {
       alertDialog("Please Enter Date");
     } else if (Time.isEmpty) {
@@ -134,6 +132,7 @@ class _AddDataState extends State<AddData> {
       });
     }
   }
+
   String? SelectedItemStatus;
 
   @override
@@ -155,15 +154,19 @@ class _AddDataState extends State<AddData> {
                   SizedBox(
                     width: 50,
                   ),
-                  SizedBox(
-                    width: 250,
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      controller: dateController = TextEditingController(
-                          text: "${selectedDate.toLocal()}".split(' ')[0]),
-                      decoration:
-                          InputDecoration(hintText: AppString.textSelectDate),
+                  InkWell(
+                    child: SizedBox(
+                      width: 250,
+                      child: TextFormField(
+                        enabled: false,
+                        controller: dateController = TextEditingController(
+                            text: "${selectedDate.toLocal()}".split(' ')[0]),
+                        style: TextStyle(color: AppColor.colorBlack),
+                        decoration:
+                            InputDecoration(hintText: AppString.textSelectDate),
+                      ),
                     ),
+                    onTap: () => _selectDate(context),
                   ),
                   InkWell(
                     child: Icon(
@@ -184,15 +187,19 @@ class _AddDataState extends State<AddData> {
                   SizedBox(
                     width: 50,
                   ),
-                  SizedBox(
-                    width: 250,
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      controller: timeController = TextEditingController(
-                          text: selectedTime.format(context).toString()),
-                      decoration:
-                          InputDecoration(hintText: AppString.textSelectTime),
+                  InkWell(
+                    child: SizedBox(
+                      width: 250,
+                      child: TextFormField(
+                        enabled: false,
+                        controller: timeController = TextEditingController(
+                            text: selectedTime.format(context).toString()),
+                        style: TextStyle(color: AppColor.colorBlack),
+                        decoration:
+                            InputDecoration(hintText: AppString.textSelectTime),
+                      ),
                     ),
+                    onTap: () => _selectTime(context),
                   ),
                   InkWell(
                     child: Icon(
