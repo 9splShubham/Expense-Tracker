@@ -32,20 +32,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
     });
   }*/
   void fetchMonthData() async {
-    final data = await dbHelper.selectMonthFromDatabase(Month, Year);
+    final data = await dbHelper.selectMonthFromDatabase(Month);
     setState(() {
       DbData = data;
     });
   }
 
   void fetchYearData() async {
-    final data = await dbHelper.selectYearFromDatabase(Year, Month);
+    final data = await dbHelper.selectMonthFromDatabase(Year);
     setState(() {
       DbData = data;
     });
   }
-
-  ///
 
   String Month = 'January';
   String Year = '2015';
