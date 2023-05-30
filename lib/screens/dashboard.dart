@@ -48,6 +48,20 @@ class _Dashboard extends State<Dashboard> {
     initData();
   }
 
+  void fetchMonthData() async {
+    final data = await dbHelper.getMonthData(Month, Year);
+    setState(() {
+      mAddDataModel = data;
+    });
+  }
+
+  void fetchYearData() async {
+    final data = await dbHelper.getYearData(Year, Month);
+    setState(() {
+      mAddDataModel = data;
+    });
+  }
+
   ///Pie Chart
 
   Map<String, double> dataMap = {
@@ -227,6 +241,7 @@ class _Dashboard extends State<Dashboard> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 Month = newValue!;
+                                fetchMonthData();
                               });
                             },
                           ),
@@ -261,6 +276,7 @@ class _Dashboard extends State<Dashboard> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 Year = newValue!;
+                                fetchYearData();
                               });
                             },
                           ),
@@ -335,6 +351,15 @@ class _Dashboard extends State<Dashboard> {
                     ],
                   ),
                 ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              InkWell(
+                child: Text("Show all data"),
+                onTap: () {
+                  initData();
+                },
               ),
               SizedBox(
                 height: 20,

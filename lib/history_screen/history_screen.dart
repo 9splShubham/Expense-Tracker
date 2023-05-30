@@ -19,27 +19,27 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     // TODO: implement initState
     dbHelper = DbHelper();
-    fetchMonthData();
-    fetchYearData();
-    /*fetchDataFromDb();*/
+
+    fetchDataFromDb();
     super.initState();
   }
 
-  /* void fetchDataFromDb() async {
+  void fetchDataFromDb() async {
     final data = await dbHelper.getAllData();
     setState(() {
       DbData = data;
     });
-  }*/
+  }
+
   void fetchMonthData() async {
-    final data = await dbHelper.selectMonthFromDatabase(Month);
+    final data = await dbHelper.selectMonthFromDatabase(Month, Year);
     setState(() {
       DbData = data;
     });
   }
 
   void fetchYearData() async {
-    final data = await dbHelper.selectMonthFromDatabase(Year);
+    final data = await dbHelper.selectYearFromDatabase(Year, Month);
     setState(() {
       DbData = data;
     });
@@ -176,6 +176,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
               SizedBox(
                 height: 20,
               ),
+              InkWell(
+                child: Text("Show all data"),
+                onTap: () {
+                  fetchDataFromDb();
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
@@ -189,8 +198,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                       DataColumn(label: Text("AMOUNT")),
                       DataColumn(label: Text("TYPE")),
-                      /*   DataColumn(label: Text("PAYMENT")),
-                      DataColumn(label: Text("STATUS")),*/
+                      DataColumn(label: Text("PAYMENT")),
+                      /*     DataColumn(label: Text("STATUS")),*/
                       /*                     DataColumn(label: Text("CATEGORY")),
                       DataColumn(label: Text("PAYMENT")),
                       DataColumn(label: Text("STATUS")),
@@ -212,8 +221,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ),
                           )),
                           DataCell(Text(row['type'].toString())),
-                          /*     DataCell(Text(row['payment'].toString())),
-                          DataCell(Text(row['status'].toString())),*/
+                          DataCell(Text(row['paymentMethod'].toString())),
+                          /*DataCell(Text(row['status'].toString())),*/
                           /*         DataCell(Text(row['category'].toString())),
                           DataCell(Text(row['payment'].toString())),
                           DataCell(Text(row['status'].toString())),
