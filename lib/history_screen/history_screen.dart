@@ -177,7 +177,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 height: 20,
               ),
               InkWell(
-                child: Text("Show all data"),
+                child: Text(AppString.textShowalldata),
                 onTap: () {
                   fetchDataFromDb();
                 },

@@ -82,6 +82,7 @@ class _AddDataState extends State<AddData> {
   @override
   void initState() {
     dbHelper = DbHelper();
+
     super.initState();
   }
 
@@ -305,7 +306,7 @@ class _AddDataState extends State<AddData> {
                                       ),
                                       Center(
                                         child: Text(
-                                          "Enter Your Text",
+                                          AppString.textEnterYourText,
                                           style: getTextStyle(
                                               AppFonts.semiBoldBlack,
                                               AppSize.textSize20),
@@ -323,7 +324,8 @@ class _AddDataState extends State<AddData> {
                                             border: InputBorder.none,
                                             filled: true,
                                             fillColor: Colors.blue[100],
-                                            hintText: "Type your text here",
+                                            hintText:
+                                                AppString.textTypeyourtexthere,
                                             hintStyle: getTextStyle(
                                                 AppFonts.regularGrey,
                                                 AppSize.textSize14),
@@ -344,7 +346,7 @@ class _AddDataState extends State<AddData> {
                                             width: 160,
                                             child: ElevatedButton(
                                               child: Text(
-                                                "Cancel",
+                                                AppString.textCancel,
                                                 style: getTextStyle(
                                                   AppFonts.regularBlue,
                                                   AppSize.textSize16,
@@ -364,7 +366,7 @@ class _AddDataState extends State<AddData> {
                                             height: 50,
                                             width: 160,
                                             child: ElevatedButton(
-                                              child: Text("Add",
+                                              child: Text(AppString.textAdd,
                                                   style: getTextStyle(
                                                       AppFonts.regular,
                                                       AppSize.textSize16)),
@@ -458,7 +460,7 @@ class _AddDataState extends State<AddData> {
                                       ),
                                       Center(
                                         child: Text(
-                                          "Enter Your Text",
+                                          AppString.textEnterYourText,
                                           style: getTextStyle(
                                               AppFonts.semiBoldBlack,
                                               AppSize.textSize20),
@@ -476,7 +478,8 @@ class _AddDataState extends State<AddData> {
                                             border: InputBorder.none,
                                             filled: true,
                                             fillColor: Colors.blue[100],
-                                            hintText: "Type your text here",
+                                            hintText:
+                                                AppString.textTypeyourtexthere,
                                             hintStyle: getTextStyle(
                                                 AppFonts.regularGrey,
                                                 AppSize.textSize14),
@@ -497,7 +500,7 @@ class _AddDataState extends State<AddData> {
                                             width: 160,
                                             child: ElevatedButton(
                                               child: Text(
-                                                "Cancel",
+                                                AppString.textCancel,
                                                 style: getTextStyle(
                                                   AppFonts.regularBlue,
                                                   AppSize.textSize16,
@@ -517,7 +520,7 @@ class _AddDataState extends State<AddData> {
                                             height: 50,
                                             width: 160,
                                             child: ElevatedButton(
-                                              child: Text("Add",
+                                              child: Text(AppString.textAdd,
                                                   style: getTextStyle(
                                                       AppFonts.regular,
                                                       AppSize.textSize16)),

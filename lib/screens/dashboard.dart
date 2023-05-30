@@ -356,7 +356,7 @@ class _Dashboard extends State<Dashboard> {
                 height: 20,
               ),
               InkWell(
-                child: Text("Show all data"),
+                child: Text(AppString.textShowalldata),
                 onTap: () {
                   initData();
                 },

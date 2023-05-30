@@ -46,6 +46,7 @@ class AppString {
   static const textAmount = 'Amount ';
   static const textEnterAmount = 'Enter Amount ';
   static const textAddeddatasuccessfully = 'Added data successfully';
+  static const textShowalldata = 'Show all data';
 
   /// BOTTOM SHEET
 
@@ -55,4 +56,8 @@ class AppString {
   /// HISTORY
 
   static const textLISTOFEXPENSES = 'LIST OF EXPENSES';
+  static const textEnterYourText = 'Enter Your Text';
+  static const textTypeyourtexthere = 'Type your text here';
+  static const textCancel = 'Cancel';
+  static const textAdd = 'Add';
 }
