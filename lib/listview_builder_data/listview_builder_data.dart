@@ -78,24 +78,20 @@ class Data extends StatelessWidget {
                           ? AppColor.colorGreen
                           : AppColor.colorRed),
                     ),
-                  )
-                  /*      Text(
-                    item.amount.toString(),
                   ),
                   SizedBox(
-                    width: 10,
+                    width: 40,
                   ),
-                  Text("Rs"),*/
+                  InkWell(
+                    child: const Icon(
+                      Icons.delete,
+                      color: AppColor.colorRed,
+                    ),
+                    onTap: () {
+                      showAlertDialog2(context);
+                    },
+                  ),
                 ],
-              ),
-              InkWell(
-                child: const Icon(
-                  Icons.delete,
-                  color: AppColor.colorRed,
-                ),
-                onTap: () {
-                  showAlertDialog2(context);
-                },
               ),
             ],
           ),

@@ -123,18 +123,45 @@ class DbHelper {
     return res.first['SUM($U_Amount)'] as int;
   }
 
-  Future<List<Map<String, dynamic>>> selectYearFromDatabase(String year) async {
+  Future<List<Map<String, dynamic>>> selectYearFromDatabase(
+      String year, month) async {
     var dbClient = await db;
     var res = await dbClient.rawQuery(
-        '''SELECT * FROM $Table_UserData WHERE $U_Date LIKE '$year%' ''');
+        '''SELECT * FROM $Table_UserData WHERE $U_Date LIKE '$month%$year%' ''');
     return res;
   }
 
   Future<List<Map<String, dynamic>>> selectMonthFromDatabase(
-      String month) async {
+      String month, year) async {
     var dbClient = await db;
     var res = await dbClient.rawQuery(
-        '''SELECT * FROM $Table_UserData WHERE $U_Date LIKE '$month%' ''');
+        '''SELECT * FROM $Table_UserData WHERE $U_Date LIKE '$month%$year' ''');
     return res;
+  }
+
+  Future<List<AddDataModel>> getMonthData(String month, year) async {
+    var dbClient = await db;
+    var res = await dbClient.rawQuery(
+        '''SELECT * FROM $Table_UserData WHERE $U_Date LIKE '$month%$year' ''');
+    try {
+      List<AddDataModel> mAddDataModel = List<AddDataModel>.from(
+          res.map((model) => AddDataModel.fromJson(model)));
+      return mAddDataModel;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<AddDataModel>> getYearData(String year, month) async {
+    var dbClient = await db;
+    var res = await dbClient.rawQuery(
+        '''SELECT * FROM $Table_UserData WHERE $U_Date LIKE '$month%$year%' ''');
+    try {
+      List<AddDataModel> mAddDataModel = List<AddDataModel>.from(
+          res.map((model) => AddDataModel.fromJson(model)));
+      return mAddDataModel;
+    } catch (e) {
+      return [];
+    }
   }
 }

@@ -80,3 +80,22 @@ class AddDataModel {
     return data;
   }
 }
+
+class PieModel {
+  String? amount;
+  String? category;
+
+  PieModel({this.amount, this.category});
+
+  PieModel.fromJson(Map<String, dynamic> json) {
+    amount = json['amount'];
+    category = json['category'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['amount'] = this.amount;
+    data['category'] = this.category;
+    return data;
+  }
+}
